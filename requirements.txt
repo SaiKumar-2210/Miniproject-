@@ -1,0 +1,13 @@
+pandas
+numpy
+requests
+pyyaml
+tqdm
+scikit-learn
+statsmodels
+tensorflow
+matplotlib
+seaborn
+openmeteo-requests
+requests-cache
+retry_requests

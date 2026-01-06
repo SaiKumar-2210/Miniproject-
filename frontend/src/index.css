@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Premium Styles */
+body {
+  @apply bg-slate-950 text-slate-50 antialiased selection:bg-indigo-500 selection:text-white;
+}

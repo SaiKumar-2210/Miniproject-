@@ -12,6 +12,8 @@ import sys
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from src.utils.config_loader import load_config
+from src.utils.model_registry import ModelRegistry
+import pickle
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,7 +22,10 @@ class DeepLearningModel:
     def __init__(self, config):
         self.config = config
         self.processed_path = config['paths']['processed_data']
+        self.models_path = os.path.join(config['paths']['models'], 'lstm')
+        os.makedirs(self.models_path, exist_ok=True)
         self.scaler = MinMaxScaler(feature_range=(0, 1))
+        self.registry = ModelRegistry()
 
     def load_data(self):
         try:
@@ -68,17 +73,29 @@ class DeepLearningModel:
         X_train, X_test = X[:train_size], X[train_size:]
         y_train, y_test = y[:train_size], y[train_size:]
         
-        # Build LSTM Model
-        model = Sequential([
-            LSTM(50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
-            Dropout(0.2),
-            LSTM(50, return_sequences=False),
-            Dropout(0.2),
-            Dense(25),
-            Dense(1)
-        ])
-        
-        model.compile(optimizer='adam', loss='mean_squared_error')
+        # Detect and Init TPU
+        try:
+            tpu = tf.distribute.cluster_resolver.TPUClusterResolver() # TPU detection
+            logger.info(f"Running on TPU: {tpu.master()}")
+            tf.config.experimental_connect_to_cluster(tpu)
+            tf.tpu.experimental.initialize_tpu_system(tpu)
+            strategy = tf.distribute.TPUStrategy(tpu)
+        except ValueError:
+            logger.info("TPU not found, using default strategy (CPU/GPU)")
+            strategy = tf.distribute.get_strategy()
+
+        # Build LSTM Model within strategy scope
+        with strategy.scope():
+            model = Sequential([
+                LSTM(50, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])),
+                Dropout(0.2),
+                LSTM(50, return_sequences=False),
+                Dropout(0.2),
+                Dense(25),
+                Dense(1)
+            ])
+            
+            model.compile(optimizer='adam', loss='mean_squared_error')
         
         logger.info(f"Training LSTM for {commodity} in {district}...")
         model.fit(X_train, y_train, batch_size=16, epochs=20, verbose=0) # verbose=0 for cleaner logs
@@ -101,9 +118,51 @@ class DeepLearningModel:
         mape = mean_absolute_percentage_error(inverse_y, inverse_preds)
         
         logger.info(f"LSTM Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+        
+        # Save Model and Scaler associated with this specific training
+        # Note: Ideally we retrain on full data, but for LSTM sticking to the trained one is often okay if recent data was in validation
+        # But let's assume we want to save this model.
+        
+        model_filename = f"{commodity}_{district}_lstm.keras"
+        model_path = os.path.join(self.models_path, model_filename)
+        model.save(model_path)
+        
+        scaler_filename = f"{commodity}_{district}_scaler.pkl"
+        scaler_path = os.path.join(self.models_path, scaler_filename)
+        with open(scaler_path, 'wb') as f:
+            pickle.dump(self.scaler, f)
+            
+        logger.info(f"Saved LSTM model to {model_path} and scaler to {scaler_path}")
+        
+        # Register
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+        rel_model_path = os.path.relpath(model_path, project_root)
+        rel_scaler_path = os.path.relpath(scaler_path, project_root)
+        
+        self.registry.register_model(
+            commodity=commodity,
+            district=district,
+            model_type="lstm",
+            model_path=rel_model_path,
+            scaler_path=rel_scaler_path,
+            metrics={"rmse": rmse, "mape": mape}
+        )
+        
         return rmse, mape
+
+    def run_training(self):
+        commodities = self.config['commodities']
+        districts = self.config['region']['districts']
+        
+        for commodity in commodities:
+            for district in districts:
+                logger.info(f"Starting training pipeline for {commodity} - {district}")
+                try:
+                    self.train_evaluate(commodity, district)
+                except Exception as e:
+                    logger.error(f"Training failed for {commodity}-{district}: {e}")
 
 if __name__ == "__main__":
     config = load_config()
     model = DeepLearningModel(config)
-    model.train_evaluate("Rice", "Warangal")
+    model.run_training()

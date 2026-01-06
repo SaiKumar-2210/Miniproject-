@@ -110,13 +110,25 @@ class HybridModel:
         
         from tensorflow.keras.layers import Dropout
         
-        model_lstm = Sequential([
-            LSTM(32, activation='tanh', input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[2]), return_sequences=False),
-            Dropout(0.2), # Add dropout to prevent overfitting
-            Dense(16, activation='relu'),
-            Dense(1)
-        ])
-        model_lstm.compile(optimizer='adam', loss='mse')
+        # Detect and Init TPU
+        try:
+            tpu = tf.distribute.cluster_resolver.TPUClusterResolver() # TPU detection
+            logger.info(f"Running on TPU: {tpu.master()}")
+            tf.config.experimental_connect_to_cluster(tpu)
+            tf.tpu.experimental.initialize_tpu_system(tpu)
+            strategy = tf.distribute.TPUStrategy(tpu)
+        except ValueError:
+            logger.info("TPU not found, using default strategy (CPU/GPU)")
+            strategy = tf.distribute.get_strategy()
+
+        with strategy.scope():
+            model_lstm = Sequential([
+                LSTM(32, activation='tanh', input_shape=(X_train_lstm.shape[1], X_train_lstm.shape[2]), return_sequences=False),
+                Dropout(0.2), # Add dropout to prevent overfitting
+                Dense(16, activation='relu'),
+                Dense(1)
+            ])
+            model_lstm.compile(optimizer='adam', loss='mse')
         
         logger.info("Training LSTM component on residuals...")
         model_lstm.fit(X_train_lstm, y_train_lstm, epochs=20, batch_size=16, verbose=0)

@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from src.utils.config_loader import load_config
+from src.utils.model_registry import ModelRegistry
+import json
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,6 +21,7 @@ class GARCHModel:
         self.processed_path = config['paths']['processed_data']
         self.output_path = os.path.join(config['paths']['models'], 'volatility')
         os.makedirs(self.output_path, exist_ok=True)
+        self.registry = ModelRegistry()
 
     def load_data(self):
         try:
@@ -115,6 +118,31 @@ class GARCHModel:
                     plt.legend()
                     plt.savefig(os.path.join(self.output_path, f'volatility_{commodity}_{district}.png'))
                     plt.close()
+                    
+                    # Save Params
+                    params_dict = {
+                        "omega": float(omega),
+                        "alpha": float(alpha),
+                        "beta": float(beta)
+                    }
+                    params_filename = f"{commodity}_{district}_garch.json"
+                    params_path = os.path.join(self.output_path, params_filename)
+                    with open(params_path, 'w') as f:
+                        json.dump(params_dict, f, indent=4)
+                        
+                    logger.info(f"Saved GARCH params to {params_path}")
+                    
+                    # Register
+                    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+                    rel_params_path = os.path.relpath(params_path, project_root)
+                    
+                    # We typically register this ALONGSIDE the main price model. 
+                    # But since they are trained separately, we can use register_model to UPDATE the entry.
+                    self.registry.register_model(
+                        commodity=commodity,
+                        district=district,
+                        garch_params_path=rel_params_path
+                    )
                     
                 except Exception as e:
                     logger.error(f"GARCH failed for {commodity}-{district}: {e}")

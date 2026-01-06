@@ -6,9 +6,13 @@ import logging
 import os
 import sys
 
+import pickle
+from datetime import datetime
+
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 from src.utils.config_loader import load_config
+from src.utils.model_registry import ModelRegistry
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,6 +21,9 @@ class BaselineModel:
     def __init__(self, config):
         self.config = config
         self.processed_path = config['paths']['processed_data']
+        self.models_path = os.path.join(config['paths']['models'], 'arima')
+        os.makedirs(self.models_path, exist_ok=True)
+        self.registry = ModelRegistry()
 
     def load_data(self):
         try:
@@ -70,6 +77,42 @@ class BaselineModel:
         mape = mean_absolute_percentage_error(test['modal_price'], predictions)
         
         logger.info(f"ARIMA Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+        
+        # Refit on entire dataset for production (optional, but recommended for future dates)
+        # For now, we will just save the last fitted model from the walk-forward or fit a new one on all data
+        # Fitting on all data for deployment:
+        logger.info(f"Retraining ARIMA on full dataset for deployment...")
+        final_model = ARIMA(subset['modal_price'].values, order=(5,1,0))
+        final_model_fit = final_model.fit()
+        
+        # Save Model
+        model_filename = f"{commodity}_{district}_arima.pkl"
+        model_path = os.path.join(self.models_path, model_filename)
+        with open(model_path, 'wb') as f:
+            pickle.dump(final_model_fit, f)
+            
+        logger.info(f"Saved ARIMA model to {model_path}")
+        
+        # Register Model
+        self.registry.register_model(
+            commodity=commodity,
+            district=district,
+            model_type="arima",
+            model_path=os.path.relpath(model_path, os.path.dirname(os.path.dirname(os.path.dirname(__file__)))) # Relative to project root roughly or just use abs path? Registry logic handles abs/rel. 
+            # Let's use relative path from project root for portability
+        )
+        # Re-calc relative path cleanly
+        project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../'))
+        rel_path = os.path.relpath(model_path, project_root)
+        
+        self.registry.register_model(
+            commodity=commodity,
+            district=district,
+            model_type="arima",
+            model_path=rel_path,
+            metrics={"rmse": rmse, "mape": mape}
+        )
+
         return rmse, mape
 
 if __name__ == "__main__":

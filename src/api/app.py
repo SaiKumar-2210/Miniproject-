@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import uvicorn
 import os
 import sys
+from typing import List, Dict, Any
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
@@ -44,6 +45,8 @@ class PredictionResponse(BaseModel):
     price_min: float = 0.0
     price_max: float = 0.0
     risk_level: str = "Unknown"
+    history: List[Dict[str, Any]] = []
+    forecasts: List[Dict[str, Any]] = []
 
 @app.get("/health")
 def health_check():
@@ -64,7 +67,9 @@ def predict_price(request: PredictionRequest):
             "volatility": result.get("volatility", 0.0),
             "price_min": result.get("price_min", 0.0),
             "price_max": result.get("price_max", 0.0),
-            "risk_level": result.get("risk_level", "Unknown")
+            "risk_level": result.get("risk_level", "Unknown"),
+            "history": result.get("history", []),
+            "forecasts": result.get("forecasts", [])
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

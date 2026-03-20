@@ -8,6 +8,7 @@ api_keys:
   agmarknet: "" # Placeholder if needed, usually open
   open_meteo: "" # Open access, no key needed usually
   gov_data: "579b464db66ec23bdd000001795acca069e747436daf7b98bf6a3024" # API key for data.gov.in
+  gemini: "AIzaSyAyt4dYvZVgp1FYvpbo3aoRy1LsAJadT5A" # Gemini API key for real-time data
 
 region:
   state: "Telangana"

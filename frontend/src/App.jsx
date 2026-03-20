@@ -22,28 +22,24 @@ function App() {
       });
       setData(response.data);
 
-      // Mock generate chart data based on result for demo
-      // In prod, API should return history
-      const mockHistory = [];
-      const basePrice = response.data.modal_price;
-      const volatility = response.data.volatility;
+      // Map actual historical data
+      const chartHistory = response.data.history.map(item => ({
+        date: item.date,
+        price: item.modal_price,
+        forecast: null
+      }));
 
-      // Generate 10 days of "history" leading up to forecast
-      for (let i = 10; i > 0; i--) {
-        mockHistory.push({
-          date: `T-${i}`,
-          price: basePrice * (1 + (Math.random() * volatility - volatility / 2)),
-          forecast: null
+      // Add 3-day forecasts
+      const forecasts = response.data.forecasts || [];
+      forecasts.forEach((fc) => {
+        chartHistory.push({
+          date: fc.date,
+          price: null,
+          forecast: fc.price
         });
-      }
-      // Add T+1 Forecast
-      mockHistory.push({
-        date: 'Tomorrow',
-        price: null,
-        forecast: basePrice
       });
 
-      setChartData(mockHistory);
+      setChartData(chartHistory);
 
     } catch (err) {
       setError(err.response?.data?.detail || "Failed to fetch prediction. Ensure backend is running.");

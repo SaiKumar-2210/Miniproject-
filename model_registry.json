@@ -1,222 +1,222 @@
 {
     "Rice_Warangal": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Rice_Warangal_lstm.keras",
-        "updated_at": "2025-12-07 15:21:27.520756",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Rice_Warangal_arima.pkl",
+        "updated_at": "2026-03-17 09:56:29.972637",
         "metrics": {
-            "rmse": 92.36108198641948,
-            "mape": 0.036713178875296
+            "rmse": 131.609259778592,
+            "mape": 0.05502763901295333
         },
         "garch_params_path": "models\\volatility\\Rice_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Rice_Warangal_scaler.pkl"
     },
     "Rice_Karimnagar": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Rice_Karimnagar_lstm.keras",
-        "updated_at": "2025-12-07 15:21:38.273658",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Rice_Karimnagar_arima.pkl",
+        "updated_at": "2026-03-17 09:57:00.151838",
         "garch_params_path": "models\\volatility\\Rice_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Rice_Karimnagar_scaler.pkl",
         "metrics": {
-            "rmse": 99.59382476877664,
-            "mape": 0.038984103848865324
+            "rmse": 110.02967507566014,
+            "mape": 0.04330297399442706
         }
     },
     "Rice_Nalgonda": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Rice_Nalgonda_lstm.keras",
-        "updated_at": "2025-12-07 15:21:48.931710",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Rice_Nalgonda_arima.pkl",
+        "updated_at": "2026-03-17 09:57:26.659786",
         "garch_params_path": "models\\volatility\\Rice_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Rice_Nalgonda_scaler.pkl",
         "metrics": {
-            "rmse": 98.2653932248399,
-            "mape": 0.03939704205230876
+            "rmse": 112.368022584531,
+            "mape": 0.04673115970605049
         }
     },
     "Rice_Khammam": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Rice_Khammam_lstm.keras",
-        "updated_at": "2025-12-07 15:21:59.635673",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Rice_Khammam_arima.pkl",
+        "updated_at": "2026-03-17 09:57:52.721699",
         "garch_params_path": "models\\volatility\\Rice_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Rice_Khammam_scaler.pkl",
         "metrics": {
-            "rmse": 106.73867621502984,
-            "mape": 0.04160223733990294
+            "rmse": 95.83649440299742,
+            "mape": 0.035392390211990796
         }
     },
     "Rice_Nizamabad": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Rice_Nizamabad_lstm.keras",
-        "updated_at": "2025-12-07 15:22:09.257235",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Rice_Nizamabad_arima.pkl",
+        "updated_at": "2026-03-17 09:58:14.859831",
         "garch_params_path": "models\\volatility\\Rice_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Rice_Nizamabad_scaler.pkl",
         "metrics": {
-            "rmse": 92.53392297470074,
-            "mape": 0.03780562869735663
+            "rmse": 110.66712528617832,
+            "mape": 0.04361505811902113
         }
     },
     "Maize_Warangal": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Maize_Warangal_lstm.keras",
-        "updated_at": "2025-12-07 15:22:20.254370",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Maize_Warangal_arima.pkl",
+        "updated_at": "2026-03-17 09:58:38.284942",
         "garch_params_path": "models\\volatility\\Maize_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Maize_Warangal_scaler.pkl",
         "metrics": {
-            "rmse": 114.0000616220283,
-            "mape": 0.017926660370500145
+            "rmse": 82.61750851642341,
+            "mape": 0.013338978881622419
         }
     },
     "Maize_Karimnagar": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Maize_Karimnagar_lstm.keras",
-        "updated_at": "2025-12-07 15:22:31.028572",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Maize_Karimnagar_arima.pkl",
+        "updated_at": "2026-03-17 09:59:14.072790",
         "garch_params_path": "models\\volatility\\Maize_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Maize_Karimnagar_scaler.pkl",
         "metrics": {
-            "rmse": 96.27240245989088,
-            "mape": 0.01534582688081762
+            "rmse": 102.73005745971918,
+            "mape": 0.01683719756983781
         }
     },
     "Maize_Nalgonda": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Maize_Nalgonda_lstm.keras",
-        "updated_at": "2025-12-07 15:22:40.522340",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Maize_Nalgonda_arima.pkl",
+        "updated_at": "2026-03-17 10:00:18.202132",
         "garch_params_path": "models\\volatility\\Maize_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Maize_Nalgonda_scaler.pkl",
         "metrics": {
-            "rmse": 98.4664053415722,
-            "mape": 0.015128140293374736
+            "rmse": 107.96240431736712,
+            "mape": 0.017220058373412745
         }
     },
     "Maize_Khammam": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Maize_Khammam_lstm.keras",
-        "updated_at": "2025-12-07 15:22:50.040202",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Maize_Khammam_arima.pkl",
+        "updated_at": "2026-03-17 10:01:23.564940",
         "garch_params_path": "models\\volatility\\Maize_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Maize_Khammam_scaler.pkl",
         "metrics": {
-            "rmse": 95.17006175562612,
-            "mape": 0.015256523186951367
+            "rmse": 116.69400770558055,
+            "mape": 0.018226579797743423
         }
     },
     "Maize_Nizamabad": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Maize_Nizamabad_lstm.keras",
-        "updated_at": "2025-12-07 15:22:58.996041",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Maize_Nizamabad_arima.pkl",
+        "updated_at": "2026-03-17 10:02:08.683239",
         "garch_params_path": "models\\volatility\\Maize_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Maize_Nizamabad_scaler.pkl",
         "metrics": {
-            "rmse": 96.36487310792515,
-            "mape": 0.015561277869525077
+            "rmse": 82.40390251096676,
+            "mape": 0.013735379092203221
         }
     },
     "Cotton_Warangal": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Cotton_Warangal_lstm.keras",
-        "updated_at": "2025-12-07 15:23:09.819480",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Cotton_Warangal_arima.pkl",
+        "updated_at": "2026-03-17 10:02:36.147430",
         "garch_params_path": "models\\volatility\\Cotton_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Warangal_scaler.pkl",
         "metrics": {
-            "rmse": 99.19920339346444,
-            "mape": 0.015660237186869482
+            "rmse": 109.77175697028673,
+            "mape": 0.018640598901910645
         }
     },
     "Cotton_Karimnagar": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Cotton_Karimnagar_lstm.keras",
-        "updated_at": "2025-12-07 15:23:20.250382",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Cotton_Karimnagar_arima.pkl",
+        "updated_at": "2026-03-17 10:03:00.241688",
         "garch_params_path": "models\\volatility\\Cotton_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Karimnagar_scaler.pkl",
         "metrics": {
-            "rmse": 106.09715068824812,
-            "mape": 0.01715332041060898
+            "rmse": 117.74279273574639,
+            "mape": 0.019181896650871996
         }
     },
     "Cotton_Nalgonda": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Cotton_Nalgonda_lstm.keras",
-        "updated_at": "2025-12-07 15:23:29.566744",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Cotton_Nalgonda_arima.pkl",
+        "updated_at": "2026-03-17 10:03:45.901017",
         "garch_params_path": "models\\volatility\\Cotton_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Nalgonda_scaler.pkl",
         "metrics": {
-            "rmse": 104.78777522737896,
-            "mape": 0.016735251687811686
+            "rmse": 112.69302062028503,
+            "mape": 0.018669748149792376
         }
     },
     "Cotton_Khammam": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Cotton_Khammam_lstm.keras",
-        "updated_at": "2025-12-07 15:23:41.523542",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Cotton_Khammam_arima.pkl",
+        "updated_at": "2026-03-17 10:04:50.812507",
         "garch_params_path": "models\\volatility\\Cotton_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Khammam_scaler.pkl",
         "metrics": {
-            "rmse": 102.8694336378834,
-            "mape": 0.016183334528588344
+            "rmse": 101.93781465432777,
+            "mape": 0.016557742917756645
         }
     },
     "Cotton_Nizamabad": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Cotton_Nizamabad_lstm.keras",
-        "updated_at": "2025-12-07 15:23:50.806056",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Cotton_Nizamabad_arima.pkl",
+        "updated_at": "2026-03-17 10:06:26.294722",
         "garch_params_path": "models\\volatility\\Cotton_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Nizamabad_scaler.pkl",
         "metrics": {
-            "rmse": 108.98737690139322,
-            "mape": 0.016969479967206262
+            "rmse": 105.25532729803722,
+            "mape": 0.016128246981657737
         }
     },
     "Red Gram_Warangal": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Red Gram_Warangal_lstm.keras",
-        "updated_at": "2025-12-07 15:23:59.376426",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Red Gram_Warangal_arima.pkl",
+        "updated_at": "2026-03-17 10:07:31.363720",
         "garch_params_path": "models\\volatility\\Red Gram_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Red Gram_Warangal_scaler.pkl",
         "metrics": {
-            "rmse": 105.57918722231244,
-            "mape": 0.016559973959117905
+            "rmse": 118.54571087341523,
+            "mape": 0.019909815599300894
         }
     },
     "Red Gram_Karimnagar": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Red Gram_Karimnagar_lstm.keras",
-        "updated_at": "2025-12-07 15:24:09.609130",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Red Gram_Karimnagar_arima.pkl",
+        "updated_at": "2026-03-17 10:07:53.224647",
         "garch_params_path": "models\\volatility\\Red Gram_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Red Gram_Karimnagar_scaler.pkl",
         "metrics": {
-            "rmse": 106.36552299792746,
-            "mape": 0.01671683550974181
+            "rmse": 94.6376464131965,
+            "mape": 0.014809422767809971
         }
     },
     "Red Gram_Nalgonda": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Red Gram_Nalgonda_lstm.keras",
-        "updated_at": "2025-12-07 15:24:19.738984",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Red Gram_Nalgonda_arima.pkl",
+        "updated_at": "2026-03-17 10:08:15.163108",
         "garch_params_path": "models\\volatility\\Red Gram_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Red Gram_Nalgonda_scaler.pkl",
         "metrics": {
-            "rmse": 92.46410226518302,
-            "mape": 0.015391339519209379
+            "rmse": 108.77214304472035,
+            "mape": 0.01730393195464931
         }
     },
     "Red Gram_Khammam": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Red Gram_Khammam_lstm.keras",
-        "updated_at": "2025-12-07 15:24:31.396376",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Red Gram_Khammam_arima.pkl",
+        "updated_at": "2026-03-17 10:08:39.459712",
         "garch_params_path": "models\\volatility\\Red Gram_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Red Gram_Khammam_scaler.pkl",
         "metrics": {
-            "rmse": 100.87561003009087,
-            "mape": 0.01615166913929725
+            "rmse": 74.24601918675697,
+            "mape": 0.01134996696255999
         }
     },
     "Red Gram_Nizamabad": {
-        "model_type": "lstm",
-        "model_path": "models\\lstm\\Red Gram_Nizamabad_lstm.keras",
-        "updated_at": "2025-12-07 15:24:42.072569",
+        "model_type": "arima",
+        "model_path": "models\\arima\\Red Gram_Nizamabad_arima.pkl",
+        "updated_at": "2026-03-17 10:09:00.951188",
         "garch_params_path": "models\\volatility\\Red Gram_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Red Gram_Nizamabad_scaler.pkl",
         "metrics": {
-            "rmse": 103.17582464660218,
-            "mape": 0.016573831571879454
+            "rmse": 127.74918666822664,
+            "mape": 0.020141803624079083
         }
     }
 }

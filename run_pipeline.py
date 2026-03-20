@@ -4,6 +4,13 @@ Master Pipeline Script - Final Version
 import pandas as pd
 import numpy as np
 import os
+import sys
+
+# Ensure project root is on the path
+sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+from src.utils.config_loader import load_config
+from src.etl.agmarknet import AgmarknetClient
+from src.etl.gemini_data import GeminiDataClient
 
 print("="*60)
 print("AGRICULTURAL COMMODITY PRICE PREDICTION PIPELINE")
@@ -14,26 +21,44 @@ raw_path = "data/raw"
 processed_path = "data/processed"
 os.makedirs(processed_path, exist_ok=True)
 
+# Load project config
+config = load_config()
+
 # STEP 1: Load Data
 print("\nSTEP 1: Loading Data...")
 prices = pd.read_csv(os.path.join(raw_path, "agmarknet_data.csv"))
+if 'arrival_date' in prices.columns:
+    prices.rename(columns={'arrival_date': 'date'}, inplace=True)
 weather = pd.read_csv(os.path.join(raw_path, "weather_data.csv"))
 msp = pd.read_csv(os.path.join(raw_path, "msp_data.csv"))
 
-print(f"  Prices: {prices.shape}")
+print(f"  Prices (gov/mock): {prices.shape}")
 print(f"  Weather: {weather.shape}")
 print(f"  MSP: {msp.shape}")
+
+# STEP 1b: Gemini Real-Time Data
+print("\nSTEP 1b: Fetching Real-Time Data via Gemini API...")
+try:
+    gemini_client = GeminiDataClient(config)
+    gemini_df = gemini_client.fetch_realtime_data(save=True)
+    if not gemini_df.empty:
+        prices = AgmarknetClient.merge_with_gemini(prices, gemini_df)
+        print(f"  Prices after Gemini merge: {prices.shape}")
+    else:
+        print("  Gemini returned no data — using gov/mock prices only.")
+except Exception as _gemini_err:
+    print(f"  Gemini step failed (non-fatal): {_gemini_err}")
 
 # STEP 2: Clean and Merge
 print("\nSTEP 2: Cleaning and Merging...")
 
 # Clean prices
-if 'arrival_date' in prices.columns:
-    prices.rename(columns={'arrival_date': 'date'}, inplace=True)
-prices['date'] = pd.to_datetime(prices['date'])
+prices['date'] = pd.to_datetime(prices['date'], format='mixed', dayfirst=True)
 
 # Clean weather
 weather['date'] = pd.to_datetime(weather['date'])
+if weather['date'].dt.tz is not None:
+    weather['date'] = weather['date'].dt.tz_localize(None)
 
 # Merge
 merged = pd.merge(prices, weather, on=['date', 'district'], how='left')
@@ -45,6 +70,7 @@ final_df = pd.merge(merged, msp_long, on=['year', 'commodity'], how='left')
 
 # Save merged
 merged_path = os.path.join(processed_path, "merged_data.csv")
+final_df.sort_values(by=['date', 'commodity', 'district'], ascending=[False, True, True], inplace=True)
 final_df.to_csv(merged_path, index=False)
 print(f"  Merged data: {final_df.shape}")
 

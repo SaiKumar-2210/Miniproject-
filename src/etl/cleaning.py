@@ -20,6 +20,8 @@ class DataCleaner:
     def load_raw_data(self):
         try:
             prices = pd.read_csv(os.path.join(self.raw_path, "agmarknet_data.csv"))
+            if 'arrival_date' in prices.columns:
+                prices = prices.rename(columns={'arrival_date': 'date'})
             weather = pd.read_csv(os.path.join(self.raw_path, "weather_data.csv"))
             msp = pd.read_csv(os.path.join(self.raw_path, "msp_data.csv"))
             return prices, weather, msp
@@ -29,12 +31,8 @@ class DataCleaner:
 
     def clean_prices(self, df):
         """Clean price data."""
-        # Handle column name variations
-        if 'arrival_date' in df.columns:
-            df = df.rename(columns={'arrival_date': 'date'})
-        
         logger.info(f"Prices shape before cleaning: {df.shape}")
-        df['date'] = pd.to_datetime(df['date'])
+        df['date'] = pd.to_datetime(df['date'], format='mixed', dayfirst=True)
         # Remove timezone information if present
         if df['date'].dt.tz is not None:
             df['date'] = df['date'].dt.tz_localize(None)

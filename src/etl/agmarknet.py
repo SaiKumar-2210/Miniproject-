@@ -95,6 +95,48 @@ class AgmarknetClient:
         df.to_csv(path, index=False)
         logger.info(f"Data saved to {path}")
 
+    @staticmethod
+    def merge_with_gemini(gov_df: pd.DataFrame, gemini_df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Merge government (data.gov.in) price data with Gemini real-time data.
+
+        Government data takes precedence: if the same (date, district, commodity)
+        row exists in both sources, the gov row is kept and the Gemini row is dropped.
+
+        Parameters
+        ----------
+        gov_df : pd.DataFrame   — data fetched from data.gov.in / mock
+        gemini_df : pd.DataFrame — data returned by GeminiDataClient
+
+        Returns
+        -------
+        pd.DataFrame  merged and deduplicated
+        """
+        if gemini_df is None or gemini_df.empty:
+            return gov_df
+
+        # Tag sources so we can inspect later if needed
+        gov_copy = gov_df.copy()
+        if 'source' not in gov_copy.columns:
+            gov_copy['source'] = 'gov_data'
+
+        combined = pd.concat([gov_copy, gemini_df], ignore_index=True)
+
+        # Dedup: keep the first occurrence per (date, district, commodity).
+        # Since gov rows are listed first, they win.
+        dedup_cols = ['date', 'district', 'commodity']
+        available = [c for c in dedup_cols if c in combined.columns]
+        if available:
+            combined = combined.drop_duplicates(subset=available, keep='first')
+
+        combined.reset_index(drop=True, inplace=True)
+        logger.info(
+            f"Merged data: {len(gov_copy)} gov rows + {len(gemini_df)} Gemini rows "
+            f"→ {len(combined)} total rows after dedup."
+        )
+        return combined
+
+
 if __name__ == "__main__":
     config = load_config()
     client = AgmarknetClient(config)

@@ -103,9 +103,9 @@ class InferenceEngine:
         self.model_cache[cache_key] = artifacts
         return artifacts
 
-    def predict(self, commodity, district):
+    def predict(self, commodity, district, forecast_days=3):
         """
-        Generate prediction for the next available date (T+1).
+        Generate prediction for the next N days (default 3).
         """
         # 1. Load Data (History)
         # We need enough history for lags (max lag 90) + rolling (max 90)
@@ -140,71 +140,53 @@ class InferenceEngine:
         
         result = {}
         
-        # 4. Inference
+        # 4. Multi-day Inference
+        from datetime import timedelta
+        last_date = history_df['date'].max()
+        forecasts_list = []
+        
         if model_type == 'lstm':
-            # LSTM needs specific columns and scaling
             feature_cols = ['modal_price', 'arrival_quantity', 'temperature_max', 'rain', 'month_sin', 'month_cos']
-            
-            # Extract last SEQ_LENGTH rows (14)
             SEQ_LENGTH = 14
-            latest_data = features_df[feature_cols].tail(SEQ_LENGTH).values
+            latest_data = features_df[feature_cols].tail(SEQ_LENGTH).values.copy()
             
             if len(latest_data) < SEQ_LENGTH:
                 return {"error": "Not enough data after feature engineering"}
-                
-            # Scale
+            
             scaled_data = scaler.transform(latest_data)
             
-            # Reshape (1, SEQ_LENGTH, n_features)
-            X_input = scaled_data.reshape(1, SEQ_LENGTH, len(feature_cols))
-            
-            # Predict
-            # Determine prediction strategy: CPU or TPU?
-            # For inference, default CPU is fine usually.
-            pred_scaled = model.predict(X_input)
-            
-            # Inverse Transform
-            # Dummy array trick again
-            dummy = np.zeros((1, len(feature_cols)))
-            dummy[:, 0] = pred_scaled.flatten()
-            pred_price = scaler.inverse_transform(dummy)[0, 0]
+            for day_offset in range(1, forecast_days + 1):
+                X_input = scaled_data.reshape(1, SEQ_LENGTH, len(feature_cols))
+                pred_scaled = model.predict(X_input, verbose=0)
+                
+                dummy = np.zeros((1, len(feature_cols)))
+                dummy[:, 0] = pred_scaled.flatten()
+                pred_price = scaler.inverse_transform(dummy)[0, 0]
+                
+                forecast_date = last_date + timedelta(days=day_offset)
+                forecasts_list.append({
+                    'date': forecast_date.strftime('%Y-%m-%d'),
+                    'price': float(pred_price)
+                })
+                
+                # Shift window: drop first row, append new predicted row
+                new_row_scaled = scaled_data[-1].copy()
+                new_row_scaled[0] = pred_scaled.flatten()[0]
+                scaled_data = np.vstack([scaled_data[1:], new_row_scaled.reshape(1, -1)])
             
         elif model_type == 'arima':
-            # ARIMA predict
-            # For ARIMA, we usually just need the history of the target variable
-            # But the saved model object (statsmodels wrapper) might store its own history.
-            # If we used `ARIMA.fit()`, the model is fixed to the training data.
-            # To predict on NEW data, we need to `apply` or `append` the new observations.
-            # Since we pickled the results wrapper, we can try using `apply`.
-            
-            # Simplify: Just refit a new ARIMA on the history_df (fast enough)?
-            # Or use the saved parameters.
-            # Statsmodels `apply` is the correct way: new_res = res.apply(new_data)
-            # But that requires keeping the whole history aligned.
-            
-            # Alternative: Just predict the next step based on loaded history?
-            # If the model was trained on T_train, and now we are at T_now (months later),
-            # the saved model is stale.
-            # "Productionizing" ARIMA often implies re-training or using `append`.
-            
-            # For this MVP, let's assume we re-train on the fly or the saved model is fresh.
-            # Let's try to forecast 1 step ahead from the saved model state.
-            # CAUTION: If saved model is old, this forecast is for the past.
-            
-            # Better approach for ARIMA in this specific lightweight setup:
-            # We saved the FIT object. It has a state.
-            # We should probably just Refit for best accuracy if it's cheap?
-            # Or use `forecast` if we just trained it.
-            
-            # Let's assume the user just ran training (Step 5 of task).
-            # So the model is fresh.
-            forecast = model.forecast(steps=1)
-            pred_price = forecast[0]
-            
+            forecast_values = model.forecast(steps=forecast_days)
+            for day_offset, pred_price in enumerate(forecast_values, start=1):
+                forecast_date = last_date + timedelta(days=day_offset)
+                forecasts_list.append({
+                    'date': forecast_date.strftime('%Y-%m-%d'),
+                    'price': float(pred_price)
+                })
         else:
             return {"error": "Model type not supported"}
-            
-        result['modal_price'] = float(pred_price)
+        
+        result['modal_price'] = forecasts_list[0]['price']  # T+1 as the primary
+        result['forecasts'] = forecasts_list
         
         # 5. Volatility (GARCH)
         garch = artifacts.get('garch')
@@ -250,6 +232,14 @@ class InferenceEngine:
                 risk = "High"
             result['risk_level'] = risk
             
+        # 6. Extract recent history
+        if history_df is not None and not history_df.empty:
+            recent_history = history_df.tail(10)[['date', 'modal_price']].copy()
+            recent_history['date'] = recent_history['date'].dt.strftime('%Y-%m-%d')
+            result['history'] = recent_history.to_dict(orient='records')
+        else:
+            result['history'] = []
+        
         return result
 
 if __name__ == "__main__":

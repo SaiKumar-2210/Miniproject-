@@ -26,7 +26,7 @@ MAX_NAN_RATIO     = 0.10         # No feature may be >10% empty
 REQUIRED_FEATURES = ['modal_price']  # Must always exist
 # Weather/lag features are strongly recommended but not hard-required,
 # because they depend on a successful ETL run.
-RECOMMENDED_FEATURES = ['temperature_max', 'rain', 'price_lag_7']
+RECOMMENDED_FEATURES = ['temperature_max', 'rain', 'price_lag_7', 'price_momentum_3d', 'rain_shock', 'temp_shock']
 SEQ_LENGTH = 14                  # Look-back window (2 weeks)
 TEST_SIZE  = 30                  # Last 30 days for evaluation
 
@@ -198,13 +198,13 @@ class DeepLearningModel:
                 Input(shape=(X_train.shape[1], X_train.shape[2])),
                 Bidirectional(GRU(32, return_sequences=False)),
                 BatchNormalization(),
-                Dropout(0.2),
+                Dropout(0.1),
                 Dense(16, activation='relu'),
                 Dense(1)
             ])
             model.compile(
                 optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
-                loss='huber'
+                loss='mse'
             )
 
         logger.info(f"Training GRU for {commodity} in {district}...")

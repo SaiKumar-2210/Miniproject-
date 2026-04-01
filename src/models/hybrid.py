@@ -176,13 +176,13 @@ class HybridModel:
                 Input(shape=(X_train.shape[1], X_train.shape[2])),
                 Bidirectional(GRU(32, return_sequences=False)),
                 BatchNormalization(),
-                Dropout(0.2),
+                Dropout(0.1),
                 Dense(16, activation='relu'),
                 Dense(1)
             ])
             model_gru.compile(
                 optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
-                loss='huber'
+                loss='mse'
             )
 
         logger.info("Training GRU component on residuals...")

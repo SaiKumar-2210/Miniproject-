@@ -85,6 +85,18 @@ class FeatureEngineer:
         df['rain_cum_30d'] = df.groupby(['commodity', 'district'])['rain'].transform(lambda x: x.rolling(window=30).sum())
         df['rain_cum_90d'] = df.groupby(['commodity', 'district'])['rain'].transform(lambda x: x.rolling(window=90).sum())
         
+        # Volatility Capture: Price Momentum & Weather Shocks
+        # 1. Price Momentum (Percentage change over 3 days)
+        df['price_momentum_3d'] = df.groupby(['commodity', 'district'])['modal_price'].transform(lambda x: x.pct_change(periods=3))
+        
+        # 2. Weather Shocks (Current day vs 30-day moving average)
+        # Replacing NaNs resulting from math with 0 (no shock before window)
+        rain_30d_avg = df.groupby(['commodity', 'district'])['rain'].transform(lambda x: x.rolling(window=30, min_periods=1).mean())
+        temp_30d_avg = df.groupby(['commodity', 'district'])['temperature_max'].transform(lambda x: x.rolling(window=30, min_periods=1).mean())
+        
+        df['rain_shock'] = df['rain'] - rain_30d_avg
+        df['temp_shock'] = df['temperature_max'] - temp_30d_avg
+        
         # Arrival Momentum (Rolling Mean) - commented out as arrival_quantity column doesn't exist
         # df['arrival_momentum_7d'] = df.groupby(['commodity', 'district'])['arrival_quantity'].transform(lambda x: x.rolling(window=7).mean())
         

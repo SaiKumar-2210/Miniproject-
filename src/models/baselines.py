@@ -75,8 +75,9 @@ class BaselineModel:
         # Evaluate
         rmse = np.sqrt(mean_squared_error(test['modal_price'], predictions))
         mape = mean_absolute_percentage_error(test['modal_price'], predictions)
+        accuracy = max(0.0, 100.0 - (mape * 100.0))
         
-        logger.info(f"ARIMA Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+        logger.info(f"ARIMA Results for {commodity}-{district}: RMSE={rmse:.2f}, Accuracy={accuracy:.1f}%")
         
         # Refit on entire dataset for production (optional, but recommended for future dates)
         # For now, we will just save the last fitted model from the walk-forward or fit a new one on all data

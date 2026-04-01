@@ -52,12 +52,16 @@ class Evaluator:
                     logger.error(f"Hybrid failed: {e}")
                     h_rmse, h_mape = None, None
                 
+                b_accuracy = max(0.0, 100.0 - (b_mape * 100.0)) if b_mape is not None else None
+                d_accuracy = max(0.0, 100.0 - (d_mape * 100.0)) if d_mape is not None else None
+                h_accuracy = max(0.0, 100.0 - (h_mape * 100.0)) if h_mape is not None else None
+                
                 self.results.append({
                     "Commodity": commodity,
                     "District": district,
-                    "Baseline_RMSE": b_rmse, "Baseline_MAPE": b_mape,
-                    "LSTM_RMSE": d_rmse, "LSTM_MAPE": d_mape,
-                    "Hybrid_RMSE": h_rmse, "Hybrid_MAPE": h_mape
+                    "Baseline_RMSE": b_rmse, "Baseline_Accuracy(%)": b_accuracy,
+                    "GRU_RMSE": d_rmse, "GRU_Accuracy(%)": d_accuracy,
+                    "Hybrid_RMSE": h_rmse, "Hybrid_Accuracy(%)": h_accuracy
                 })
         
         # Save results
@@ -68,7 +72,7 @@ class Evaluator:
         
         # Print Summary
         print("\n=== Evaluation Summary ===")
-        print(results_df.groupby('Commodity')[['Baseline_MAPE', 'LSTM_MAPE', 'Hybrid_MAPE']].mean())
+        print(results_df.groupby('Commodity')[['Baseline_Accuracy(%)', 'GRU_Accuracy(%)', 'Hybrid_Accuracy(%)']].mean())
         
         return results_df
 

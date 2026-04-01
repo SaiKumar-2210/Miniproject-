@@ -210,8 +210,9 @@ class HybridModel:
         # Evaluate
         rmse = np.sqrt(mean_squared_error(actuals, final_preds))
         mape = mean_absolute_percentage_error(actuals, final_preds)
+        accuracy = max(0.0, 100.0 - (mape * 100.0))
 
-        logger.info(f"Hybrid Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+        logger.info(f"Hybrid Results for {commodity}-{district}: RMSE={rmse:.2f}, Accuracy={accuracy:.1f}%")
         
         # Plot Performance
         plt.figure(figsize=(10, 6))

@@ -7,6 +7,7 @@ from tensorflow.keras.layers import GRU, Dense, Dropout, Bidirectional, BatchNor
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
+import matplotlib.pyplot as plt
 import logging
 import os
 import sys
@@ -211,6 +212,24 @@ class HybridModel:
         mape = mean_absolute_percentage_error(actuals, final_preds)
 
         logger.info(f"Hybrid Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+        
+        # Plot Performance
+        plt.figure(figsize=(10, 6))
+        plt.plot(actuals, label='Actual Price', color='blue', linewidth=2)
+        plt.plot(final_preds, label='Hybrid Predicted Price', color='orange', linestyle='--', linewidth=2)
+        plt.title(f'Hybrid (ARIMA+GRU) Predictions vs Actuals ({commodity} - {district})')
+        plt.xlabel('Days (Test Set)')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.grid(True)
+        
+        models_path = os.path.join(self.config['paths']['models'], 'hybrid')
+        os.makedirs(models_path, exist_ok=True)
+        plot_path = os.path.join(models_path, f"{commodity}_{district}_hybrid_plot.png")
+        plt.savefig(plot_path)
+        plt.close()
+        logger.info(f"Saved performance plot to {plot_path}")
+        
         return rmse, mape
 
 

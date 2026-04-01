@@ -6,6 +6,7 @@ from tensorflow.keras.layers import GRU, Dense, Dropout, Bidirectional, BatchNor
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_percentage_error
+import matplotlib.pyplot as plt
 import logging
 import os
 import sys
@@ -229,6 +230,21 @@ class DeepLearningModel:
         rmse = np.sqrt(mean_squared_error(inverse_y, inverse_preds))
         mape = mean_absolute_percentage_error(inverse_y, inverse_preds)
         logger.info(f"GRU Results for {commodity}-{district}: RMSE={rmse:.2f}, MAPE={mape:.2%}")
+
+        # Plot Performance
+        plt.figure(figsize=(10, 6))
+        plt.plot(inverse_y, label='Actual Price', color='blue', linewidth=2)
+        plt.plot(inverse_preds, label='Predicted Price', color='red', linestyle='--', linewidth=2)
+        plt.title(f'GRU Predictions vs Actuals ({commodity} - {district})')
+        plt.xlabel('Days (Test Set)')
+        plt.ylabel('Price')
+        plt.legend()
+        plt.grid(True)
+        
+        plot_path = os.path.join(self.models_path, f"{commodity}_{district}_plot.png")
+        plt.savefig(plot_path)
+        plt.close()
+        logger.info(f"Saved performance plot to {plot_path}")
 
         # Save model + scaler
         model_filename = f"{commodity}_{district}_lstm.keras"

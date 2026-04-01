@@ -2,7 +2,7 @@
     "Rice_Warangal": {
         "model_type": "arima",
         "model_path": "models\\arima\\Rice_Warangal_arima.pkl",
-        "updated_at": "2026-03-17 09:56:29.972637",
+        "updated_at": "2026-03-21 17:56:31.609696",
         "metrics": {
             "rmse": 131.609259778592,
             "mape": 0.05502763901295333
@@ -13,7 +13,7 @@
     "Rice_Karimnagar": {
         "model_type": "arima",
         "model_path": "models\\arima\\Rice_Karimnagar_arima.pkl",
-        "updated_at": "2026-03-17 09:57:00.151838",
+        "updated_at": "2026-03-21 17:57:43.748187",
         "garch_params_path": "models\\volatility\\Rice_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Rice_Karimnagar_scaler.pkl",
         "metrics": {
@@ -24,7 +24,7 @@
     "Rice_Nalgonda": {
         "model_type": "arima",
         "model_path": "models\\arima\\Rice_Nalgonda_arima.pkl",
-        "updated_at": "2026-03-17 09:57:26.659786",
+        "updated_at": "2026-03-21 17:58:30.861530",
         "garch_params_path": "models\\volatility\\Rice_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Rice_Nalgonda_scaler.pkl",
         "metrics": {
@@ -35,7 +35,7 @@
     "Rice_Khammam": {
         "model_type": "arima",
         "model_path": "models\\arima\\Rice_Khammam_arima.pkl",
-        "updated_at": "2026-03-17 09:57:52.721699",
+        "updated_at": "2026-03-21 17:59:50.289567",
         "garch_params_path": "models\\volatility\\Rice_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Rice_Khammam_scaler.pkl",
         "metrics": {
@@ -46,7 +46,7 @@
     "Rice_Nizamabad": {
         "model_type": "arima",
         "model_path": "models\\arima\\Rice_Nizamabad_arima.pkl",
-        "updated_at": "2026-03-17 09:58:14.859831",
+        "updated_at": "2026-03-21 18:00:41.583689",
         "garch_params_path": "models\\volatility\\Rice_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Rice_Nizamabad_scaler.pkl",
         "metrics": {
@@ -57,7 +57,7 @@
     "Maize_Warangal": {
         "model_type": "arima",
         "model_path": "models\\arima\\Maize_Warangal_arima.pkl",
-        "updated_at": "2026-03-17 09:58:38.284942",
+        "updated_at": "2026-03-21 18:01:59.875895",
         "garch_params_path": "models\\volatility\\Maize_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Maize_Warangal_scaler.pkl",
         "metrics": {
@@ -68,7 +68,7 @@
     "Maize_Karimnagar": {
         "model_type": "arima",
         "model_path": "models\\arima\\Maize_Karimnagar_arima.pkl",
-        "updated_at": "2026-03-17 09:59:14.072790",
+        "updated_at": "2026-03-21 18:02:57.911367",
         "garch_params_path": "models\\volatility\\Maize_Karimnagar_garch.json",
         "scaler_path": "models\\lstm\\Maize_Karimnagar_scaler.pkl",
         "metrics": {
@@ -79,7 +79,7 @@
     "Maize_Nalgonda": {
         "model_type": "arima",
         "model_path": "models\\arima\\Maize_Nalgonda_arima.pkl",
-        "updated_at": "2026-03-17 10:00:18.202132",
+        "updated_at": "2026-03-21 18:04:14.493433",
         "garch_params_path": "models\\volatility\\Maize_Nalgonda_garch.json",
         "scaler_path": "models\\lstm\\Maize_Nalgonda_scaler.pkl",
         "metrics": {
@@ -90,7 +90,7 @@
     "Maize_Khammam": {
         "model_type": "arima",
         "model_path": "models\\arima\\Maize_Khammam_arima.pkl",
-        "updated_at": "2026-03-17 10:01:23.564940",
+        "updated_at": "2026-03-21 18:05:32.330609",
         "garch_params_path": "models\\volatility\\Maize_Khammam_garch.json",
         "scaler_path": "models\\lstm\\Maize_Khammam_scaler.pkl",
         "metrics": {
@@ -101,7 +101,7 @@
     "Maize_Nizamabad": {
         "model_type": "arima",
         "model_path": "models\\arima\\Maize_Nizamabad_arima.pkl",
-        "updated_at": "2026-03-17 10:02:08.683239",
+        "updated_at": "2026-03-21 18:06:31.085308",
         "garch_params_path": "models\\volatility\\Maize_Nizamabad_garch.json",
         "scaler_path": "models\\lstm\\Maize_Nizamabad_scaler.pkl",
         "metrics": {
@@ -112,7 +112,7 @@
     "Cotton_Warangal": {
         "model_type": "arima",
         "model_path": "models\\arima\\Cotton_Warangal_arima.pkl",
-        "updated_at": "2026-03-17 10:02:36.147430",
+        "updated_at": "2026-03-21 18:07:35.391098",
         "garch_params_path": "models\\volatility\\Cotton_Warangal_garch.json",
         "scaler_path": "models\\lstm\\Cotton_Warangal_scaler.pkl",
         "metrics": {

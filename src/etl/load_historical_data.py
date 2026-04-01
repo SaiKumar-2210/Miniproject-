@@ -20,9 +20,9 @@ def load_historical_data():
     agmarknet = AgmarknetClient(config)
     weather = WeatherClient(config)
     
-    # Define date range (2 years)
+    # Define date range (4 years)
     end_date = datetime.now().strftime("%Y-%m-%d")
-    start_date = (datetime.now() - timedelta(days=730)).strftime("%Y-%m-%d")
+    start_date = (datetime.now() - timedelta(days=1460)).strftime("%Y-%m-%d")
     
     logger.info(f"Fetching data from {start_date} to {end_date}...")
     

@@ -48,10 +48,14 @@ class DataCleaner:
 
     def clean_weather(self, df):
         """Clean weather data."""
-        df['date'] = pd.to_datetime(df['date'])
-        # Remove timezone information if present
-        if df['date'].dt.tz is not None:
-            df['date'] = df['date'].dt.tz_localize(None)
+        # CRITICAL FIX: Weather dates arrive as UTC timestamps like '2024-03-16 18:30:00+00:00'
+        # but price dates are plain dates like '2024-03-17'. We must:
+        # 1. Parse as UTC-aware
+        # 2. Convert to IST (Asia/Kolkata, UTC+5:30) so 18:30 UTC becomes 00:00 IST next day
+        # 3. Strip timezone info and normalize to date-only
+        df['date'] = pd.to_datetime(df['date'], utc=True)
+        df['date'] = df['date'].dt.tz_convert('Asia/Kolkata').dt.tz_localize(None).dt.normalize()
+        
         df = df.sort_values(by=['district', 'date']).reset_index(drop=True)
         
         # Interpolate missing weather data

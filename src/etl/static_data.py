@@ -22,11 +22,11 @@ class StaticDataLoader:
         """
         # Example MSP data (approximate values for recent years)
         data = {
-            "year": [2020, 2021, 2022, 2023, 2024],
-            "Rice": [1868, 1940, 2040, 2183, 2300], # Common Grade
-            "Maize": [1850, 1870, 1962, 2090, 2225],
-            "Cotton": [5515, 5726, 6080, 6620, 7121], # Medium Staple
-            "Red Gram": [6000, 6300, 6600, 7000, 7550]
+            "year": [2020, 2021, 2022, 2023, 2024, 2025, 2026],
+            "Rice": [1868, 1940, 2040, 2183, 2300, 2425, 2550], # Common Grade
+            "Maize": [1850, 1870, 1962, 2090, 2225, 2365, 2510],
+            "Cotton": [5515, 5726, 6080, 6620, 7121, 7621, 8125], # Medium Staple
+            "Red Gram": [6000, 6300, 6600, 7000, 7550, 8100, 8650]
         }
         df = pd.DataFrame(data)
         return df
